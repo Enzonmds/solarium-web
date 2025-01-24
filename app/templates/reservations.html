@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas</title>
+</head>
+<body>
+    <h1>Gestión de Reservas</h1>
+
+    <h2>Crear una nueva reserva</h2>
+    <form method="POST" action="{{ url_for('reservations') }}">
+        {{ form.hidden_tag() }}
+        <p>{{ form.client_name.label }} {{ form.client_name() }}</p>
+        <p>{{ form.client_email.label }} {{ form.client_email() }}</p>
+        <p>{{ form.service_id.label }} {{ form.service_id() }}</p>
+        <p>{{ form.date.label }} {{ form.date() }}</p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <h2>Reservas existentes</h2>
+    <ul>
+        {% for reservation in reservations %}
+            <li>
+                {{ reservation.client_name }} - {{ reservation.service.name }} - {{ reservation.date.strftime('%Y-%m-%d %H:%M') }}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('home') }}">Volver al Inicio</a>
+</body>
+</html>
