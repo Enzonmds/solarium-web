@@ -1,12 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reservas</title>
-</head>
-<body>
-    <h1>Gestión de Reservas</h1>
+{% extends "base.html" %}
+
+{% block title %}Reservas{% endblock %}
+
+{% block content %}
+<h1>Gestión de Reservas</h1>
 
     <h2>Crear una nueva reserva</h2>
     <form method="POST" action="{{ url_for('reservations') }}">
@@ -33,11 +30,59 @@
             {% endif %}
         </p>
         <p>
-            {{ form.date.label }} 
-            {{ form.date() }}
-            {% if form.date.errors %}
-                <span style="color: red;">{{ form.date.errors[0] }}</span>
-            {% endif %}
+            <div id="calendar"></div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var calendarEl = document.getElementById('calendar');
+                    var calendar = new FullCalendar.Calendar(calendarEl, {
+                        initialView: 'timeGridDay',
+                        locale: 'es',
+                        headerToolbar: {
+                            left: 'prev,next today',
+                            center: 'title',
+                            right: 'timeGridWeek,timeGridDay'
+                        },
+                        slotDuration: '00:20:00', // Intervalos de 20 minutos
+                        businessHours: {
+                            daysOfWeek: [1, 2, 3, 4, 5, 6], // Lunes a sábado
+                            startTime: '11:00', // Horario de apertura
+                            endTime: '19:30' // Horario de cierre
+                        },
+                        events: async function (info, successCallback, failureCallback) {
+                            const serviceId = document.getElementById('service').value;
+                            const response = await fetch(`/api/availability?service_id=${serviceId}&date=${info.startStr}`);
+                            const data = await response.json();
+                            
+                            const events = data.available_slots.map(slot => {
+                                const remainingSlots = data.available_slots.length;
+
+                                let color = 'blue'; // Default: disponible
+                                if (remainingSlots < 3) {
+                                    color = 'yellow'; // Pocos turnos
+                                } else if (remainingSlots === 0) {
+                                    color = 'gray'; // No disponible
+                                }
+
+                                return {
+                                    title: 'Disponible',
+                                    start: slot,
+                                    color: color
+                                };
+                            });
+
+            
+                            successCallback(events);
+                        },
+                        dateClick: function (info) {
+                            // Abre un modal o formulario para confirmar la reserva
+                            alert(`Seleccionaste: ${info.dateStr}`);
+                        }
+                    });
+            
+                    calendar.render();
+                });
+            </script>
+            
         </p>
         <p>{{ form.submit() }}</p>
     </form>
@@ -50,6 +95,4 @@
             </li>
         {% endfor %}
     </ul>
-    <a href="{{ url_for('home') }}">Volver al Inicio</a>
-</body>
-</html>
+{% endblock %}

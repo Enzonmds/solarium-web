@@ -1,17 +1,12 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicios</title>
-</head>
-<body>
-    <h1>Servicios Disponibles</h1>
-    <ul>
-        {% for service in services %}
-            <li>{{ service.name }} - ${{ service.price }}</li>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('home') }}">Volver al Inicio</a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block title %}Servicios{% endblock %}
+
+{% block content %}
+<h1>Servicios Disponibles</h1>
+<ul>
+    {% for service in services %}
+        <li>{{ service.name }} - ${{ service.price }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}
