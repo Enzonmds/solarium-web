@@ -11,10 +11,34 @@
     <h2>Crear una nueva reserva</h2>
     <form method="POST" action="{{ url_for('reservations') }}">
         {{ form.hidden_tag() }}
-        <p>{{ form.client_name.label }} {{ form.client_name() }}</p>
-        <p>{{ form.client_email.label }} {{ form.client_email() }}</p>
-        <p>{{ form.service_id.label }} {{ form.service_id() }}</p>
-        <p>{{ form.date.label }} {{ form.date() }}</p>
+        <p>
+            {{ form.client_name.label }} 
+            {{ form.client_name() }}
+            {% if form.client_name.errors %}
+                <span style="color: red;">{{ form.client_name.errors[0] }}</span>
+            {% endif %}
+        </p>
+        <p>
+            {{ form.client_email.label }} 
+            {{ form.client_email() }}
+            {% if form.client_email.errors %}
+                <span style="color: red;">{{ form.client_email.errors[0] }}</span>
+            {% endif %}
+        </p>
+        <p>
+            {{ form.service_id.label }} 
+            {{ form.service_id() }}
+            {% if form.service_id.errors %}
+                <span style="color: red;">{{ form.service_id.errors[0] }}</span>
+            {% endif %}
+        </p>
+        <p>
+            {{ form.date.label }} 
+            {{ form.date() }}
+            {% if form.date.errors %}
+                <span style="color: red;">{{ form.date.errors[0] }}</span>
+            {% endif %}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
 

@@ -24,4 +24,5 @@ def create_app():
         from init_db import seed_services
         db.create_all()
         seed_services()
+        
     return app
